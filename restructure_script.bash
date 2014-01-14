@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # build directory structure
-mkdir app/src
 mkdir -p app/src/{init,appframe,config,constants,data,globals,mocks,modules,system,debug,utils}
 mkdir -p app/src/appframe/{content,footer,menu,navigation,notifications}
 mkdir -p app/src/system/{authentication,indexing,privileges,validation}
@@ -12,38 +11,44 @@ mkdir -p app/src/modules/tenants/{admin,setup}
 
 # build test directory structure
 mkdir -p test/spec/{appframe,data,modules,system,utils}
-mkdir -p test/spec/appframe/{content,footer,menu,navigation,notifications}
-mkdir -p test/spec/system/{authentication,indexing,privileges,validation}
+mkdir -p test/spec/appframe
+mkdir -p test/spec/system
 mkdir -p test/spec/data/{http,socket}
 mkdir -p test/spec/modules/{accountant,bills,contracts,dashboard,departments,entities,invoices,payments,projects,requests,clients,vendors,resources,admin,setup,timesheets}
 
 # build views directory structure
-mkdir -p app/views/appframe/{content,footer,menu,navigation,notifications}
-mkdir -p app/views/system/{authentication,indexing,privileges,validation}
-mkdir -p app/views/modules/{accountant,bills,contracts,dashboard,departments,entities,invoices,payments,projects,requests,resources,tenants,timesheets,indexing}
+mkdir -p app/views/appframe
+mkdir -p app/views/system
+mkdir -p app/views/modules/{accountant,bills,contracts,dashboard,departments,clients,vendors,invoices,payments,projects,requests,resources,admin,setup,timesheets,indexing}
 mkdir -p app/views/modals
 mkdir -p app/views/debug
 
 
 # move directories
-git mv app/scripts/third_party app/src/lib && git commit -am 'moves app/scripts/third_party to app/src/lib'
-git mv app/scripts/mocks app/src/mocks && git commit -am 'moves app/scripts/mocks to app/src/mocks'
-git mv app/scripts/directives app/src/utils/directives && git commit -am 'moves app/scripts/directives to app/src/utils/directives'
-git mv app/scripts/filters app/src/utils/filters && git commit -am 'moves app/scripts/filters to app/src/utils/filters'
-git mv app/scripts/animations app/src/utils/animations && git commit -am 'moves app/scripts/animations to app/src/utils/animations'
-git mv emails app/views/emails && git commit -am 'moves emails to app/views/emails'
+git mv app/scripts/third_party app/src/lib
+# git commit -am 'moves app/scripts/third_party to app/src/lib'
+git mv app/scripts/mocks app/src/mocks
+# git commit -am 'moves app/scripts/mocks to app/src/mocks'
+git mv app/scripts/directives app/src/utils/directives
+# git commit -am 'moves app/scripts/directives to app/src/utils/directives'
+git mv app/scripts/filters app/src/utils/filters
+# git commit -am 'moves app/scripts/filters to app/src/utils/filters'
+git mv app/scripts/animations app/src/utils/animations
+# git commit -am 'moves app/scripts/animations to app/src/utils/animations'
+git mv emails app/views/emails
+# git commit -am 'moves emails to app/views/emails'
 
 
 # move app init files to app/src/init
 git mv app/scripts/app.js app/src/init/app.js
-git mv app/src/mocks/_app.js app/src/init/appMock.js
+git mv app/scripts/mocks/_app.js app/src/init/appMock.js
 git mv app/scripts/services/Validation.js app/src/init/validation.js
-git commit -am 'builds app/init directory'
+# git commit -am 'builds app/init directory'
 
 
 # move constants to app/src/constants
 git mv app/scripts/services/{ALLOWED_VERBS,COUNTRIES,DAYS,LABELS,PERMISSIONLIST,RECURRING_PERIODS,SETTINGS,STATES,STRUCTURELIST}.js app/src/constants
-git commit -am 'moves constants to app/src/constants'
+# git commit -am 'moves constants to app/src/constants'
 
 
 # move API services, associated test suites and touch new test suites if none exists
@@ -63,14 +68,14 @@ git mv app/scripts/services/SaasSvc.js app/src/data/http/Saas.js && git touch te
 git mv app/scripts/services/Timesheets.js app/src/data/http/Timesheets.js && git touch test/spec/data/http/Timesheets.js
 git mv app/scripts/services/User.js app/src/data/http/User.js && git mv test/spec/services/User.js test/spec/data/http/User.js
 git mv app/scripts/services/Vendors.js app/src/data/http/Vendors.js && touch test/spec/data/http/Vendors.js
-git commit -am 'moves http API to app/src/data/http'
+# git commit -am 'moves http API to app/src/data/http'
 git mv app/scripts/services/kSignalRSvc.js app/src/data/socket/SignalR.js && touch test/spec/data/socket/SignalR.js
-git commit -am 'moves socket API to app/src/data/socket'
+# git commit -am 'moves socket API to app/src/data/socket'
 git mv app/scripts/services/Data.js app/src/data/http/Data.js && git mv test/spec/services/Data.js test/spec/data/Data.js
 git mv app/scripts/services/Datastore.js app/src/data/http/Datastore.js && git mv test/spec/services/Datastore.js test/spec/data/Datastore.js
 git mv app/scripts/services/kDataCacheSvc.js app/src/data/http/DataCache.js && touch test/spec/data/DataCache.js
 git mv app/scripts/services/Persist.js app/src/data/http/Persist.js && git mv test/spec/services/Persist.js test/spec/data/Persist.js
-git commit -am 'moves data storage API to app/src/data'
+# git commit -am 'moves data storage API to app/src/data'
 
 
 # MODULES
@@ -182,7 +187,7 @@ git mv app/scripts/services/Timesheet.js app/src/modules/timesheets/Timesheet.js
 git mv app/scripts/directives/timesheet.js app/src/modules/timesheets/kTimesheet.js && mv test/spec/directives/timesheet.js test/spec/modules/timesheets/kTimesheet.js
 git mv app/scripts/states/timesheets.js app/src/modules/timesheets/states.js
 git mv app/scripts/validations/timesheets.js app/src/modules/timesheets/validations.js
-git commit -am 'moves module-related services, controllers, and directives to respective module directories'
+# git commit -am 'moves module-related services, controllers, and directives to respective module directories'
 
 
 # move appframe src to respective directories
@@ -201,7 +206,7 @@ git mv app/scripts/controllers/bsPopover.js app/src/appframe/navigation/popoverC
 
 # notifications
 git mv app/scripts/controllers/notificationsCtrl.js app/src/appframe/notifications/notificationsCtrl.js && touch test/spec/appframe/notifications/notificationsCtrl.js
-git commit -am 'moves appframe-related services, controllers, directives to respective directories'
+# git commit -am 'moves appframe-related services, controllers, directives to respective directories'
 
 
 # move views to respective directories in app/views
@@ -314,7 +319,7 @@ git mv app/views/timetracker_review.html app/views/modules/timesheets/timesheets
 # system
 git mv app/views/indexing.html app/views/system/indexing.html
 git mv app/views/landing.html app/views/system/landing.html
-git commit -am 'moves module-related views to respective views subdirectory'
+# git commit -am 'moves module-related views to respective views subdirectory'
 
 
 # move appframe views to views directory
@@ -332,7 +337,7 @@ git mv app/views/more-nav-items.html app/views/appframe/navigation/more-nav-item
 
 # notifications
 git mv app/views/sidebar-second.html app/views/appframe/notifications/notifications-bar.html
-git commit -am 'moves appframe-related views to respective views subdirectory'
+# git commit -am 'moves appframe-related views to respective views subdirectory'
 
 
 # move system files to respective directories
@@ -363,4 +368,4 @@ git mv app/scripts/services/ValidationHelper.js app/src/system/validation/valida
 
 
 # clean up
-git rm -rf app/{scripts,mocks,controllers,services}
+# git rm -rf app/{scripts,mocks,controllers,services}

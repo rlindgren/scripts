@@ -31,14 +31,18 @@ module.exports.recursiveReplace = function recursiveReplace (dirList, stringsMat
 
 				var filePath = path.join(start, f);
 
-				for (var y = 0; y < stringsList.length; y++)
-					var oldString = stringsList[y][0];
-					var newString = stringsList[y][1];
+
+
+				for (var y = 0; y < stringsMatrix.length; y++) {
+					var oldString = stringsMatrix[y][0];
+					var newString;
+					if (!replacementList) newString = stringsMatrix[y][1]
+					else newString = replacementList[y][0];
 
 					if (!fs.lstatSync(filePath).isDirectory()) 
 						fs.writeFileSync(filePath, fs.readFileSync(filePath).toString().replace(oldString, newString));
 					else walk(filePath);
-
+				}
 
 			});
 		})(startDir);
@@ -52,8 +56,8 @@ module.exports.recursiveReplace = function recursiveReplace (dirList, stringsMat
 // 
 // filePath : string : list : object
 // 	-	path of the file to read
-// newPath : bool : 
-// 	-	overwrite file
+// newPath : string : bool
+// 	-	if truthy, should be a path string
 // start : string
 // 	-	block begins
 // end : string
@@ -61,7 +65,7 @@ module.exports.recursiveReplace = function recursiveReplace (dirList, stringsMat
 // content : string
 // 	-	replacement content
 // 	
-module.exports.replaceBlockComment = function replaceBlock (filePath, newPath, start, end, content) {
+module.exports.replaceBlock = function replaceBlock (filePath, newPath, start, end, content) {
 
 	if (Array.isArray(filePath))
 		uu.extend(this, uu.zipObject(['filePath', 'newPath', 'start', 'end', 'content'], filePath));
@@ -69,9 +73,10 @@ module.exports.replaceBlockComment = function replaceBlock (filePath, newPath, s
 	if (typeof filePath === 'object')
 		uu.extend(this, filePath);
 
-	if (newPath) filePath = newPath;
-
 	var fileContentString = fs.readFileSync(this['filePath']).toString();
+
+	if (this['newPath']) this['filePath'] = this['newPath'];
+
 	var block = fileContentString.substring(fileContentString.indexOf(this['start']) + 1, fileContentString.indexOf(this['end']));
 
 	fs.writeFileSync(this['filePath'], fileContentString.replace(block, this['content']));
@@ -89,10 +94,9 @@ module.exports.replaceBlockComment = function replaceBlock (filePath, newPath, s
 // leadingSlash : bool (optional)
 // 	-	has leading slash
 // 	
-module.exports.recursiveCollectPaths = function recursiveCollectPaths (basePath, exts, relativeBase, leadingSlash) {
+module.exports.recursiveCollectPaths = function recursiveCollectPaths (basePath, exts, relativeBase, leadingSlash, ignore) {
 
 	basePath = path.resolve(basePath);
-
 
 	return uu.flatten(Array.prototype.concat(exts).map(function (ext) {
 
@@ -103,14 +107,23 @@ module.exports.recursiveCollectPaths = function recursiveCollectPaths (basePath,
 
 
 				var filePath = path.join(start, f);
-
 				
-				if (path.extname(filePath).split('.').pop() === ext)
-					pathList.push(filePath.slice(
-						filePath.indexOf(relativeBase || filePath) + (relativeBase ? relativeBase.length : 0) + (leadingSlash ? 0 : 1), 
-						filePath.length
-					));
-				else if (fs.lstatSync(filePath).isDirectory()) walk(filePath);
+				if (fs.lstatSync(filePath).isFile()) {
+					if (!exts || path.extname(filePath).split('.').pop() === ext) {
+						pathList.push(filePath.slice(
+							filePath.indexOf(relativeBase || filePath) + (relativeBase ? relativeBase.length : 0) + (leadingSlash ? 0 : 1), 
+							filePath.length
+						));
+					}
+				}
+				else if (fs.lstatSync(filePath).isDirectory()) {
+					console.log('isDirectory');
+					if (ignore) {
+						if (Array.prototype.concat(ignore).reduce(function (a, b) { return a && (filePath.indexOf(b) < 0) }, true)) walk(filePath);
+					}
+					else walk(filePath);
+				}
+					
 
 
 			});
@@ -119,6 +132,14 @@ module.exports.recursiveCollectPaths = function recursiveCollectPaths (basePath,
 		return pathList;
 		
 	}));
+};
+
+module.exports.setRelativeTo = function setRelativeTo (paths, relDir, leadingSlash) {
+	var res = [].concat(replacements).map(function (f) { 
+		return f.replace(f.index(relDir) + relDir.length + (leadingSlash ? 0 : 1), f.length);
+	});
+	if (typeof paths === 'string') return res.join('');
+	return res;
 };
 
 // --------------------------------
