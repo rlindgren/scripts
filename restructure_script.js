@@ -183,7 +183,7 @@ var filePathsMap = [
 	['app/scripts/directives/fileDropModule.js', $(directivesSrc, 'kFileDropModule.js')],
 	['app/scripts/directives/fileListModule.js', $(directivesSrc, 'kFileListModule.js')],
 	['app/scripts/directives/flashWarning.js', $(directivesSrc, 'kFlashWarning.js')],
-	['app/scripts/directives/hide-for.js', $(directivesSrc, 'kHide-for.js')],
+	['app/scripts/directives/hide-for.js', $(directivesSrc, 'kHideFor.js')],
 	['app/scripts/directives/hoverShow.js', $(directivesSrc, 'kHoverShow.js')],
 	['app/scripts/directives/inputError.js', $(directivesSrc, 'kInputError.js')],
 	['app/scripts/directives/isActive.js', $(directivesSrc, 'kIsActive.js')],
